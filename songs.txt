@@ -1,0 +1,18 @@
+STRUCTURE OF SONG:
+intro 
+verse 
+chorus 
+bridge 
+pre-chorus
+outro
+instrumental break 
+hook
+coda
+STRUCTURE AS PER INSTRUMENTAL COMPONENTS:
+melody 
+harmony
+rhythm
+bassline
+drums/percussion
+chords
+backing vocals
