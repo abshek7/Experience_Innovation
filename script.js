@@ -1,37 +1,58 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const audio = document.getElementById('audio');
-  const bars = document.querySelectorAll('.bar');
+    const songs = [
+        'dinchak.mp3',  
+        'kp.mp3',
+        'kt.mp3',
+        'mahaan.mp3',
+        'moaning.mp3'
+    ];
 
-  // Create an audio context
-  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  const analyser = audioContext.createAnalyser();
-  const source = audioContext.createMediaElementSource(audio);
+    function getRandomSong() {
+        const randomIndex = Math.floor(Math.random() * songs.length);
+        return songs[randomIndex];
+    }
 
-  source.connect(analyser);
-  analyser.connect(audioContext.destination);
+ 
+    const audio = document.getElementById('audio');
+    const audioSource = document.getElementById('audio-source');
 
-  analyser.fftSize = 256;
-  const bufferLength = analyser.frequencyBinCount;
-  const dataArray = new Uint8Array(bufferLength);
 
-  function updateBars() {
-      analyser.getByteFrequencyData(dataArray);
+    audioSource.src = `songs/${getRandomSong()}`;
 
-      bars.forEach((bar, index) => {
-          // Scale the bar height to a reasonable range, e.g., 0-2
-          const barHeight = dataArray[index] / 128;
-          const limitedHeight = Math.min(barHeight * 100, 200);
+ 
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const analyser = audioContext.createAnalyser();
+    const source = audioContext.createMediaElementSource(audio);
 
-          // Apply the scaled height to the bar
-          bar.style.height = limitedHeight + 'px';
-      });
+    source.connect(analyser);
+    analyser.connect(audioContext.destination);
 
-      requestAnimationFrame(updateBars);
-  }
+    analyser.fftSize = 256;
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+    const bars = document.querySelectorAll('.bar');
 
-  audio.addEventListener('play', () => {
-      audioContext.resume().then(() => {
-          updateBars();
-      });
-  });
+    function updateBars() {
+        analyser.getByteFrequencyData(dataArray);
+
+        bars.forEach((bar, index) => {
+            // Scale the bar height to a reasonable range, e.g., 0-2
+            const barHeight = dataArray[index] / 128;
+            const limitedHeight = Math.min(barHeight * 100, 200);
+
+            // Apply the scaled height to the bar
+            bar.style.height = limitedHeight + 'px';
+        });
+
+        requestAnimationFrame(updateBars);
+    }
+
+    audio.addEventListener('play', () => {
+        audioContext.resume().then(() => {
+            updateBars();
+        });
+    });
+
+    
+    audio.load(); 
 });
