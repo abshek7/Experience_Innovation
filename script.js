@@ -12,14 +12,28 @@ document.addEventListener('DOMContentLoaded', () => {
         return songs[randomIndex];
     }
 
- 
     const audio = document.getElementById('audio');
     const audioSource = document.getElementById('audio-source');
+    const songSelect = document.getElementById('song-select');
 
+    // Function to load selected song
+    function loadSong(songFileName) {
+        audioSource.src = `songs/${songFileName}`;
+        audio.load();
+    }
 
-    audioSource.src = `songs/${getRandomSong()}`;
+    // Initialize with random song
+    loadSong(getRandomSong());
 
- 
+    // Handle song selection change
+    songSelect.addEventListener('change', (e) => {
+        const selectedValue = e.target.value;
+        if (selectedValue === 'random') {
+            loadSong(getRandomSong());
+        } else {
+            loadSong(selectedValue);
+        }
+    });
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     const analyser = audioContext.createAnalyser();
     const source = audioContext.createMediaElementSource(audio);
@@ -52,7 +66,4 @@ document.addEventListener('DOMContentLoaded', () => {
             updateBars();
         });
     });
-
-    
-    audio.load(); 
 });
